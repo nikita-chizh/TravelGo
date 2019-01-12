@@ -24,7 +24,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
         ageFrom.delegate = self
         ageTo.delegate = self
         query.delegate = self
-        AllTravelsRequester.getMeetingsList()
     }
 
     @IBAction func checkGender(_ sender: Any) {
@@ -51,8 +50,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
         if identifier ==  "AllTravels"
         {
         do {
-            try AllTravelsRequester.getParams.ageFrom = unpackIntText(field: ageFrom)
-            try AllTravelsRequester.getParams.ageTo = unpackIntText(field: ageTo)
+            try AllTravelsRequester.getParams.age_from = unpackIntText(field: ageFrom)
+            try AllTravelsRequester.getParams.age_to = unpackIntText(field: ageTo)
         } catch is IntFieldError {
             return false
         }catch {
@@ -66,6 +65,13 @@ class ViewController: UIViewController, UITextFieldDelegate {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "AllTravels"{
             AllTravelsRequester.getParams.query = query.text!
+            let group = DispatchGroup()
+            group.enter()
+            AllTravelsRequester.getMeetingsList(params: AllTravelsRequester.getParams)
+                { ready in
+                    group.leave()
+            }
+            group.wait() // blocks current queue so beware!
         }
     }
     

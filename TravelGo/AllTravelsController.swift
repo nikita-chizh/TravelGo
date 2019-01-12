@@ -12,13 +12,12 @@ import UIKit
 class AllTravelsController: UITableViewController {
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
         return 1
         
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 2
+        return AllTravelsRequester.users.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -26,12 +25,8 @@ class AllTravelsController: UITableViewController {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? TravelerBriefViewCell  else {
             fatalError("The dequeued cell is not an instance of " + cellIdentifier)
         }
-        
-        let testText = String(AllTravelsRequester.getParams.ageFrom) + " to " +
-        String(AllTravelsRequester.getParams.ageTo) + " query=" + AllTravelsRequester.getParams.query +
-        " INDEX=" + String(indexPath.row)
-        
-        cell.briefInfo.text = testText
+        let about = AllTravelsRequester.users[indexPath.row].owner.about
+        cell.briefInfo.text = about
         cell.ava.image =  UIImage(named: "defaultAvatar")
         return cell
     }
