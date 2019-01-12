@@ -24,6 +24,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         ageFrom.delegate = self
         ageTo.delegate = self
         query.delegate = self
+        AllTravelsRequester.getMeetingsList()
     }
 
     @IBAction func checkGender(_ sender: Any) {

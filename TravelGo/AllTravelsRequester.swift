@@ -18,7 +18,17 @@ struct GetParams{
     }
 }
 
+
 class AllTravelsRequester{
     static var getParams = GetParams()
-
+    
+    static func getMeetingsList() {
+        let urlString = "http://russian-friends.com/meetings-list?lat=0&lng=0&r=100000000"
+        guard let url = URL(string: urlString) else { return }
+        let task = URLSession.shared.dataTask(with: url) {(data, response, error) in
+            guard let data = data else { return }
+            print(String(data: data, encoding: .utf8)!)
+        }
+        task.resume()
+    }
 }
