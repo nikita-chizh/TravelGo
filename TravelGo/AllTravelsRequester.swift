@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 struct MeetingsListGetParams{
     var age_from: Int = 18
@@ -27,7 +28,8 @@ struct TestStruct: Decodable{
 }
 
 class AllTravelsRequester{
-    static var users : [TravelGO_Meeting] = []
+    static var users: [TravelGO_Meeting] = []
+    static var avas:  [UIImage] = []
     static var getParams = MeetingsListGetParams.init()
     
     static func composeUrl(getparams: MeetingsListGetParams)->URL{
@@ -47,8 +49,27 @@ class AllTravelsRequester{
         return URL(string: urlString)!
     }
     
+    static func imageFromServerURL(url: URL){ //, completion: @escaping (_ ready: Bool?)->()){
+        //костыль
+        let urlstr = url.absoluteString
+        //"https://russian-friends.com/uploads/user-photos/150x150_cropped-775821471.jpg"
+        let start = urlstr.index(urlstr.startIndex, offsetBy: 6)
+        let cheatUrlStr = "http:" + urlstr[start...]
+        let cheatURL = URL(string: cheatUrlStr)!
+        //конец костыля
+        let task = URLSession.shared.dataTask(with: cheatURL) {(data, response, error) in
+            guard let data = data else { return }
+            if let image = UIImage(data: data){
+                AllTravelsRequester.avas.append(image)
+            }
+            else{
+                print("CANNOT DECODE IMAGE WITH URL=" + url.debugDescription)
+            }
+        }
+        task.resume()
+    }
+    
     static func getMeetingsList(params: MeetingsListGetParams, completion: @escaping (_ ready: Bool?)->()){
-        // URL(fileURLWithPath: "http://russian-friends.com/meetings-list/?age_from=18&age_to=55&gender=0")
         let url = composeUrl(getparams:params)
         let task = URLSession.shared.dataTask(with: url) {(data, response, error) in
             guard let data = data else { return }
@@ -59,7 +80,18 @@ class AllTravelsRequester{
                 dateFormatter.dateFormat = "yyyy-MM-dd"
                 decoder.dateDecodingStrategy = .formatted(dateFormatter)
                 AllTravelsRequester.users = try decoder.decode([TravelGO_Meeting].self, from: data)
+                //загрузка аватар
+                for user in users {
+                    //let group = DispatchGroup()
+                    //group.enter()
+                    imageFromServerURL(url: user.owner.avatar.src_small)
+                    //{ ready in
+                    //    group.leave()
+                    //}
+                    //group.wait() // blocks current queue so beware!
+                }
                 let ready = true
+                print(AllTravelsRequester.avas.count)
                 completion(ready)
             }catch let jsonErr{
                 print(jsonErr)

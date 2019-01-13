@@ -27,7 +27,7 @@ class AllTravelsController: UITableViewController {
         }
         let about = AllTravelsRequester.users[indexPath.row].owner.about
         cell.briefInfo.text = about
-        cell.ava.image =  UIImage(named: "defaultAvatar")
+        cell.ava.image =  AllTravelsRequester.avas[indexPath.row]
         return cell
     }
 

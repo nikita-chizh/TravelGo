@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftyVK
 
 enum IntFieldError: Error {
     case runtimeError(String)
