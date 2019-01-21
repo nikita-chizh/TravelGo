@@ -10,7 +10,7 @@ import Foundation
 import SwiftyVK
 import UIKit
 
-final class VKDelegateExample: SwiftyVKDelegate {
+final class VKDelegate: SwiftyVKDelegate {
     
     let scopes: Scopes = [.messages,.offline,.friends,.wall,.photos,.audio,.video,.docs,.market,.email]
     let appId = SecretData.appId
@@ -30,6 +30,11 @@ final class VKDelegateExample: SwiftyVKDelegate {
     
     func vkTokenCreated(for sessionId: String, info: [String : String]) {
         print("token created in session \(sessionId) with info \(info)")
+        var res = CredController.fetch()
+        if !res {print("vkTokenCreated fetch error")}
+        CredController.fillFromVk(info: info)
+        res = CredController.save()
+        if !res {print("vkTokenCreated save error")}
     }
     
     func vkTokenUpdated(for sessionId: String, info: [String : String]) {

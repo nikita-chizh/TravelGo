@@ -9,8 +9,16 @@
 import Foundation
 import UIKit
 
-class AllTravelsController: UITableViewController {
+class AllTravelsController: UITableViewController, UITabBarDelegate {
+    var lastRow = 0
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        self.tableView.delegate = self
+        self.tableView.dataSource = self
+    }
+
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
         
@@ -28,11 +36,29 @@ class AllTravelsController: UITableViewController {
         let about = AllTravelsRequester.users[indexPath.row].owner.about
         cell.briefInfo.text = about
         cell.ava.image =  AllTravelsRequester.avas[indexPath.row]
+        cell.id = AllTravelsRequester.users[indexPath.row].id
+        
         return cell
     }
+    
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        if segue.identifier == "ToOneMeeting"{
+//        }
+//    }
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if (segue.identifier == "ToOneMeeting") {
+            let uid = AllTravelsRequester.users[lastRow].owner.id
+            let user = AllTravelsRequester.getMeeting(id: uid)
+            let vc = segue.destination as! OneTripViewController
+            vc.user = user
+            print("pidor")
+        }
+    }
+
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath){
+        lastRow = indexPath.row
+        performSegue(withIdentifier: "ToOneMeeting", sender: self)
     }
 
 }

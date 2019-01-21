@@ -12,6 +12,7 @@ class TravelerBriefViewCell: UITableViewCell {
 
     @IBOutlet weak var ava: UIImageView!
     @IBOutlet weak var briefInfo: UITextView!
+    var id = 0
     
     override func awakeFromNib() {
         super.awakeFromNib()

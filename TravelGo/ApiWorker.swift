@@ -4,33 +4,17 @@ import SwiftyVK
 
 final class APIWorker {
     
-    class func action(_ tag: Int) {
-        switch tag {
-        case 1:
-            authorize()
-        case 2:
-            logout()
-        case 3:
-            captcha()
-        case 4:
-            usersGet()
-        case 5:
-            friendsGet()
-        case 6:
-            uploadPhoto()
-        case 7:
-            validation()
-        case 8:
-            share()
-        default:
-            print("Unrecognized action!")
-        }
+    class var credPath:String{
+        let manager = FileManager.default
+        let url = manager.urls(for:.documentDirectory, in: .userDomainMask).first
+        return (url?.appendingPathComponent("cred").path)!
     }
-    
+
     class func authorize() {
         VK.sessions.default.logIn(
             onSuccess: { info in
-                print("SwiftyVK: success authorize with", info)
+                print("SwiftyVK: success authorize with ", info)
+                
         },
             onError: { error in
                 print("SwiftyVK: authorize failed with", error)

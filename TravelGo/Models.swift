@@ -14,15 +14,26 @@ struct TravelGO_Coord: Decodable{
 }
 
 struct TravelGO_Ava: Decodable{
-    var src_medium: URL
-    var src_small: URL
+    var src_medium: URL = URL(string: "wrong/")!
+    var src_small: URL = URL(string: "wrong/")!
+}
+
+struct TravelGO_Photo: Decodable{
+    var photo = URL(string: "wrong/")!
+    var delete_photo = URL(string: "wrong/")!
+    var set_avatar = URL(string: "wrong/")!
+    var src_small = URL(string: "wrong/")!
+    var src_medium = URL(string: "wrong/")!
+    var src_original = URL(string: "wrong/")!
 }
 
 struct TravelGO_User: Decodable {
-    var about: String
-    var avatar: TravelGO_Ava
+    var about: String = ""
+    var avatar = TravelGO_Ava()
+    var photos = [TravelGO_Photo]()
     var birth_date: Date?
-    var href: URL
+    var href = URL(string: "wrong/")!
+    var id = Int(0)
 
 }
 
@@ -39,3 +50,4 @@ struct TravelGO_Meeting: Decodable {
     var subway: String?
     var title: String
 }
+

@@ -62,7 +62,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         }
         return false
     }
-    
+    // тут происходит запрос
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "AllTravels"{
             AllTravelsRequester.getParams.query = query.text!
