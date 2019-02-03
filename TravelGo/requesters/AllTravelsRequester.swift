@@ -105,6 +105,26 @@ class AllTravelsRequester{
 
 
     ///
+    static func getImageSynchrone(url: URL)->UIImage{
+        //костыль
+        var res = UIImage()
+        let semaphore = DispatchSemaphore(value: 0)
+        let cheatURL = httpsToHttp(url)
+        let task = URLSession.shared.dataTask(with: cheatURL) {(data, response, error) in
+            guard let data = data else { return }
+            if let res_ = UIImage(data: data){
+                res = res_
+                semaphore.signal()
+            }
+            else{
+                print("CANNOT DECODE IMAGE WITH URL=" + url.debugDescription)
+            }
+        }
+        task.resume()
+        semaphore.wait()
+        return res
+    }
+    
     static func getMeeting(id: Int)-> TravelGO_User{
         
         let url = composeOneUser(id:id)

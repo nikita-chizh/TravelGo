@@ -21,15 +21,16 @@ class OneTripViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(user.about)
-        
+        //
         let swipeRight = UISwipeGestureRecognizer(target: self, action: Selector(("respondToSwipeGesture:")))
         swipeRight.direction = UISwipeGestureRecognizer.Direction.right
         self.view.addGestureRecognizer(swipeRight)
-        
+        //
         let swipeLeft = UISwipeGestureRecognizer(target: self, action: Selector(("respondToSwipeGesture:")))
         swipeLeft.direction = UISwipeGestureRecognizer.Direction.left
         self.view.addGestureRecognizer(swipeLeft)
+        //
+        swipeImageView.image = AllTravelsRequester.getImageSynchrone(url: user.avatar.src_medium)
     }
     
     func respondToSwipeGesture(gesture: UIGestureRecognizer) {
