@@ -65,12 +65,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
     // тут происходит запрос
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "AllTravels"{
-//            let queue = DispatchQueue.global(qos: .utility)
-//            queue.async{
-//                    DispatchQueue.main.async {
-//                        AllTravelsRequester.getMeetingsList(params: AllTravelsRequester.getParams)
-//                }
-//            }
             AllTravelsRequester.getParams.query = query.text!
             let group = DispatchGroup()
             group.enter()

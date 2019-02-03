@@ -8,11 +8,12 @@
 
 import UIKit
 
-class OneTripViewController: UIViewController {
+class OneTripViewController: UIViewController, UIGestureRecognizerDelegate {
 
     var imgs = [UIImage]()
     // Type in the names of your images below
-    let imageNames = ["","","","",""]
+    var photos = [TravelGO_Photo]()
+    
     var user = TravelGO_User()
     @IBOutlet weak var swipeImageView: UIImageView!
     
@@ -21,45 +22,43 @@ class OneTripViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //
-        let swipeRight = UISwipeGestureRecognizer(target: self, action: Selector(("respondToSwipeGesture:")))
-        swipeRight.direction = UISwipeGestureRecognizer.Direction.right
-        self.view.addGestureRecognizer(swipeRight)
-        //
-        let swipeLeft = UISwipeGestureRecognizer(target: self, action: Selector(("respondToSwipeGesture:")))
-        swipeLeft.direction = UISwipeGestureRecognizer.Direction.left
-        self.view.addGestureRecognizer(swipeLeft)
-        //
-        swipeImageView.image = AllTravelsRequester.getImageSynchrone(url: user.avatar.src_medium)
+        photos = user.photos
+        loadPhoto(imageURL: photos[0].photo)
+
     }
     
-    func respondToSwipeGesture(gesture: UIGestureRecognizer) {
-        
-        if let swipeGesture = gesture as? UISwipeGestureRecognizer {
-            
-            
-            switch swipeGesture.direction {
-            case UISwipeGestureRecognizer.Direction.left:
-                if currentImage == imageNames.count - 1 {
-                    currentImage = 0
-                    
-                }else{
-                    currentImage += 1
+    func loadPhoto(imageURL: URL){
+        let queue = DispatchQueue.global(qos: .utility)
+        queue.async{
+            if let data = try? Data(contentsOf: imageURL){
+                DispatchQueue.main.async {
+                    self.swipeImageView.image = UIImage(data: data)
                 }
-                swipeImageView.image = imgs[currentImage]
-                
-            case UISwipeGestureRecognizer.Direction.right:
-                if currentImage == 0 {
-                    currentImage = imageNames.count - 1
-                }else{
-                    currentImage -= 1
-                }
-                swipeImageView.image = imgs[currentImage]
-            default:
-                break
             }
         }
     }
+    
+    @IBAction func respondToSwipeGesture(swipeGesture:UISwipeGestureRecognizer) {
+        switch swipeGesture.direction {
+            case UISwipeGestureRecognizer.Direction.left:
+                if currentImage == self.photos.count - 1 {
+                    currentImage = 0
+                }else{
+                    currentImage += 1
+                }
+            
+            case UISwipeGestureRecognizer.Direction.right:
+                if currentImage == 0 {
+                    currentImage = self.photos.count - 1
+                }else{
+                    currentImage -= 1
+                }
+            default:
+                break
+            }
+            loadPhoto(imageURL: photos[currentImage].photo)
+        }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
